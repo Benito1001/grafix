@@ -1,0 +1,3 @@
+Sirkler
+Konkave former
+Legg til fancy collision finninator

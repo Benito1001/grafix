@@ -1,0 +1,5 @@
+C:/Users/Bendik/Nextcloud/programmering/c++/grafix/out/build/x64-Debug (default)/CMakeFiles/edit_cache.dir
+C:/Users/Bendik/Nextcloud/programmering/c++/grafix/out/build/x64-Debug (default)/CMakeFiles/rebuild_cache.dir
+C:/Users/Bendik/Nextcloud/programmering/c++/grafix/out/build/x64-Debug (default)/grafix/CMakeFiles/grafix.dir
+C:/Users/Bendik/Nextcloud/programmering/c++/grafix/out/build/x64-Debug (default)/grafix/CMakeFiles/edit_cache.dir
+C:/Users/Bendik/Nextcloud/programmering/c++/grafix/out/build/x64-Debug (default)/grafix/CMakeFiles/rebuild_cache.dir
