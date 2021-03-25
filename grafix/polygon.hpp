@@ -1,12 +1,13 @@
 ﻿#pragma once
+#include "constants.hpp"
+#include "vector2.hpp"
+#include "hitbox.hpp"
+#include "utils.hpp"
+
 #include <vector>
 #include <tuple>
 #include <cmath>
 #include <glad/glad.h>
-#include "constants.h"
-#include "vector2.h"
-#include "hitbox.h"
-#include "utils.h"
 
 struct DEdge {
     DVec2 start;

@@ -1,6 +1,6 @@
 #pragma once
-#include "vector2.h"
-#include "utils.h"
+#include "vector2.hpp"
+#include "utils.hpp"
 
 class Hitbox {
 public:

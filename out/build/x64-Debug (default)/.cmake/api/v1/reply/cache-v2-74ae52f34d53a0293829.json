@@ -1260,30 +1260,6 @@
 			],
 			"type" : "STATIC",
 			"value" : "C:/Users/Bendik/Nextcloud/programmering/c++/grafix"
-		},
-		{
-			"name" : "grafixx_BINARY_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "C:/Users/Bendik/Nextcloud/programmering/c++/grafix/out/build/x64-Debug (default)"
-		},
-		{
-			"name" : "grafixx_SOURCE_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "C:/Users/Bendik/Nextcloud/programmering/c++/grafix"
 		}
 	],
 	"kind" : "cache",

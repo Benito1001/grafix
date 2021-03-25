@@ -1,8 +1,9 @@
 #pragma once
+#include "polygon.hpp"
+#include "utils.hpp"
+
 #include <GLFW/glfw3.h>
 #include <unordered_map>
-#include "polygon.h"
-#include "utils.h"
 
 class Player : public Polygon {
 public:

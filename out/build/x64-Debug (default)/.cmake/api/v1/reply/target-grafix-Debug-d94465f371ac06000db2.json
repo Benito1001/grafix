@@ -140,7 +140,8 @@
 			"sourceIndexes" : 
 			[
 				1,
-				2
+				2,
+				3
 			]
 		}
 	],
@@ -154,12 +155,17 @@
 		},
 		{
 			"backtrace" : 2,
-			"path" : "grafix/physics.h",
+			"path" : "grafix/physics.hpp",
 			"sourceGroupIndex" : 1
 		},
 		{
 			"backtrace" : 2,
-			"path" : "grafix/entities.h",
+			"path" : "grafix/entities.hpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 2,
+			"path" : "grafix/glUtils.hpp",
 			"sourceGroupIndex" : 1
 		}
 	],

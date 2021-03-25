@@ -1,9 +1,8 @@
 #pragma once
-#include "polygon.h"
-#include "player.h"
-#include "utils.h"
-#include "physics.h"
-#include "vector2.h"
+#include "polygon.hpp"
+#include "player.hpp"
+#include "utils.hpp"
+#include "vector2.hpp"
 
 #include <vector>
 
@@ -28,11 +27,13 @@ void getBox(std::vector<Polygon>& entities, double contentScale) {
 }
 
 void getSlope(std::vector<Polygon>& entities, double contentScale) {
+    DVec2 pos = {-3.85, -2};
     double x0 = 0;
-    double y0 = 2;
-    double dx = 0.25;
+    double y0 = 3;
+    double L = 3;
+    double dx = 0.1;
     
-    for (size_t i = 0; i < 8; i++) {
+    for (size_t i = 0; i < (int)(L/dx); i++) {
         double a = y0/(1 + y0*(x0 + dx));
         double b = y0/(1 + y0*x0);
         std::vector<DVec2> vertices = {
@@ -50,14 +51,14 @@ void getSlope(std::vector<Polygon>& entities, double contentScale) {
             vertices[i] -= mid;
         }
 
-        entities.push_back(Polygon({x0 - 3, cy - 1}, vertices, 1, {1, 0, 1, 0}, true, true));
+        entities.push_back(Polygon({x0 + pos.x, cy + pos.y}, vertices, 1, {1, 0, 1, 0}, true, true));
         x0 += dx;
     }
 }
 
 inline Player getPlayerAndEntities(std::vector<Polygon>& entities, double contentScale) {
     getSlope(entities, contentScale);
-    Polygon hexagon = createRegularPolygon({ 2, -0.5 }, 5, 0.8, 1, { 0.1, 0.3, 0.7, 1 });
+    Polygon hexagon = createRegularPolygon({ 2, -0.5 }, 6, 0.8, 1, { 0.1, 0.3, 0.7, 1 });
     entities.push_back(hexagon);
     getBox(entities, contentScale);
     

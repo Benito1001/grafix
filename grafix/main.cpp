@@ -1,121 +1,15 @@
-#include "polygon.h"
-#include "player.h"
-#include "entities.h"
-#include "utils.h"
-#include "physics.h"
+#include "polygon.hpp"
+#include "player.hpp"
+#include "entities.hpp"
+#include "utils.hpp"
+#include "physics.hpp"
+#include "glUtils.hpp"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include <vector>
 #include <iostream>
-
-void framebufferSizeCallback(GLFWwindow *window, int width, int height);
-void scrollCallback(GLFWwindow* window, double xoffset, double yoffset);
-void processInput(GLFWwindow *window, Player &player);
-
-double contentScale = 2;
-
-const char *vertexShaderSource = R"glsl(
-    #version 430 core
-    layout (location = 0) in vec2 vertex;
-    layout (location = 1) uniform mat3 transform;
-    layout (location = 2) uniform mat3 camera;
-    void main() {
-        gl_Position = vec4((camera*transform*vec3(vertex.xy, 1)).xy, 0, 1);
-    }
-)glsl";
-
-const char *fragmentShaderSource = R"glsl(
-    #version 430 core
-    out vec4 FragColor;
-    layout (location = 3) uniform vec4 color;
-    void main() {
-        FragColor = color;
-    }
-)glsl";
-
-GLuint compileShader(const char *shaderSource, GLenum type) {
-    GLuint shader = glCreateShader(type);
-    glShaderSource(shader, 1, &shaderSource, NULL);
-    glCompileShader(shader);
-    glCheck();
-
-    // check for shader compile errors
-    GLint success;
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        char infoLog[512];
-        glGetShaderInfoLog(shader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::COMPILATION_FAILED\n"
-                  << infoLog << std::endl;
-    }
-
-    return shader;
-}
-
-GLFWwindow* glInit() {
-    // initialize and configure
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
-
-    // create window
-    const double screenScale = 0.5;
-    const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-    const unsigned int SCR_WIDTH = static_cast<unsigned int>(mode->width*screenScale);
-    const unsigned int SCR_HEIGHT = static_cast<unsigned int>(mode->height*screenScale);
-
-    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "GRAFIX", NULL, NULL);
-    if (window == NULL) {
-        std::cout << "Failed to create GLFW window" << std::endl;
-        glfwTerminate();
-    }
-    glfwMakeContextCurrent(window);
-    glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
-
-    // load all OpenGL function pointers
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        std::cout << "Failed to initialize GLAD" << std::endl;
-    }
-
-    GLuint vao;
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
-    glCheck();
-
-    // compile shaders
-    GLint vertexShader = compileShader(vertexShaderSource, GL_VERTEX_SHADER);
-    GLint fragmentShader = compileShader(fragmentShaderSource, GL_FRAGMENT_SHADER);
-
-    // link shaders
-    GLint shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-    glCheck();
-
-    // check for linking errors
-    GLint success;
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if (!success) {
-        char infoLog[512];
-        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
-    }
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
-    glCheck();
-
-    glUseProgram(shaderProgram);
-    glCheck();
-
-    glfwSetScrollCallback(window, scrollCallback);
-
-    return window;
-}
 
 int main() {
     GLFWwindow* window = glInit();
@@ -132,7 +26,7 @@ int main() {
     int avgCounter = 30;
     int frameCount = 0;
     double dt = 1.0/60;
-    double dtGoal = 1e-4;
+    double dtGoal = 5e-3;
     double avgdt = dt*avgCounter;
     double time = getTime() - dt;
 
@@ -148,7 +42,7 @@ int main() {
             rprint("frame rate = " << 1/(avgdt / avgCounter) << " fps");
             avgdt = 0;
         }
-        
+
         // poll events and process input
         glfwPollEvents();
         processInput(window, player);
@@ -169,7 +63,7 @@ int main() {
             sx = static_cast<float>(windowHeight)/windowWidth;
             sy = 1;
         }
-        
+
         // create and upload camera matrix
         GLfloat cameraMatrix[9] = {
             sx/contentScale, 0, 0,
@@ -178,8 +72,13 @@ int main() {
         };
         glUniformMatrix3fv(2, 1, GL_TRUE, cameraMatrix);
         glCheck();
-        physicsUpdate(entityPs, dt, dtGoal);
-        
+
+        double repetitions = std::ceil(dt / dtGoal);
+        for (size_t i = 0; i < repetitions; i++) {
+            double pdt = dt / repetitions;
+            physicsUpdate(entityPs, pdt);
+        }
+
         // draw
         for (Polygon* entity: entityPs) {
             entity->draw();
@@ -200,7 +99,7 @@ void scrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
     double speed = 1.0/16;
     contentScale -= yoffset*contentScale*speed;
 }
-    
+
 
 void processInput(GLFWwindow *window, Player &player) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
@@ -212,7 +111,7 @@ void processInput(GLFWwindow *window, Player &player) {
     } else if (glfwGetKey(window, GLFW_KEY_W) == GLFW_RELEASE) {
         player.keys[GLFW_KEY_W] = false;
     }
-    
+
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
         player.keys[GLFW_KEY_S] = true;
     } else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_RELEASE) {

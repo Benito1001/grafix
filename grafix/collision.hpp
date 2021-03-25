@@ -1,8 +1,9 @@
+#include "polygon.hpp"
+#include "vector2.hpp"
+#include "utils.hpp"
+
 #include <array>
 #include <algorithm>
-#include "polygon.h"
-#include "vector2.h"
-#include "utils.h"
 
 struct PartialCollisionData {
     double collisionDepth;
